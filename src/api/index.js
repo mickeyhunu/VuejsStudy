@@ -3,8 +3,8 @@ import router from '../router'
 
 const DOMAIN = 'http://localhost:3000'
 const UNAUTHORIZED = 401
-const onUnauthrorized = () => {
-  router.push('/login')
+const onUnauthorized = () => {
+  router.push(`/login?returnPath=${encodeURIComponent(location.pathname)}`)
 }
 
 const request = (method, url, data) => {
@@ -13,17 +13,20 @@ const request = (method, url, data) => {
     url: DOMAIN + url,
     data
   }).then(result => result.data)
-    .catch(result => {
-      console.log(result.response);
+    .catch(result  => {
+      console.log(response);
       const {status} = result.response
-      if (status === UNAUTHORIZED)
-      throw Error(result)
+      if (status === UNAUTHORIZED) onUnauthorized()
+      throw Error(response)
    })
 }
 
 export const setAuthInHeader = token => {
   axios.defaults.headers.common['Authorization'] = token ? `Bearer ${token}` : null;
 }
+
+const {token} = localStorage
+if (token) setAuthInHeader(token)
 
 export const board = {
   fetch() {

@@ -14,18 +14,18 @@
                 </a>
             </div>
         </div>
-        <Addboard v-if="isAddBoard" @close="isAddBoard = false" @submit="onAddBoard"></Addboard>
+        <AddBoard v-if="isAddBoard" @submit="onAddBoard"></AddBoard>
     </div>
 </template>
 
 <script>
 import {board} from '../api'
-import Addboard from './AddBoard.vue'
+import AddBoard from './AddBoard.vue'
 import {mapState, mapMutations} from 'vuex'
 
 export default {
     components: {
-        Addboard
+        AddBoard
     },
     data() {
         return {
@@ -35,9 +35,9 @@ export default {
         }
     },
     computed: {
-        ...mapState([
-        'isAddBoard'
-         ]),
+        ...mapState({
+        isAddBoard: 'isAddBoard'
+        }),
     },
     created() {
         this.fetchData()
@@ -62,8 +62,7 @@ export default {
             })
         },
         onAddBoard(title) {
-            board.create(title)
-            .then( () => this.fetchData() )
+           this.fetchData()
         }
     }
 }
